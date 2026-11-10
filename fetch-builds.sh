@@ -2,7 +2,7 @@
 # Runs on the server: pulls client builds from the GitHub "guddesk" release into ./downloads.
 set -euo pipefail
 
-REPO="${REPO:-tonirafi/guddesk}"
+REPO="${REPO:-tonirafi/guddesk-client}"
 TAG="${TAG:-guddesk}"
 cd "$(dirname "$0")"
 mkdir -p downloads
