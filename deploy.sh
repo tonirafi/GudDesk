@@ -8,9 +8,10 @@ SSH=(ssh -o BatchMode=yes -i "$SSH_KEY" "$SERVER")
 
 cd "$(dirname "$0")"
 
-"${SSH[@]}" "mkdir -p $REMOTE_DIR/data $REMOTE_DIR/web"
+"${SSH[@]}" "mkdir -p $REMOTE_DIR/data $REMOTE_DIR/web $REMOTE_DIR/downloads && \
+  { [ -f $REMOTE_DIR/downloads/builds.json ] || echo '{\"files\":{}}' > $REMOTE_DIR/downloads/builds.json; }"
 rsync -az --delete -e "ssh -o BatchMode=yes -i $SSH_KEY" \
-  --exclude data --exclude .git --exclude .env \
+  --exclude data --exclude downloads --exclude client --exclude .git --exclude .env \
   ./ "$SERVER:$REMOTE_DIR/"
 
 # hbbs generates the keypair on first start; web mounts the public key file, so it must exist first.

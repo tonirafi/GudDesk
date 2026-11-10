@@ -3,66 +3,177 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GudDesk — Remote Desktop Gutekno</title>
+  <title>Download GudDesk — Remote Desktop Gutekno</title>
+  <meta name="description" content="Download GudDesk untuk Ubuntu, macOS, dan Android. Remote desktop self-hosted milik Gutekno.">
   <style>
-    :root { --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8; }
+    :root { --bg: #0b1120; --card: #151e32; --card2: #1c2740; --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8; --ok: #4ade80; --warn: #fbbf24; }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); }
-    main { max-width: 760px; margin: 0 auto; padding: 48px 20px; }
-    h1 { margin: 0 0 4px; font-size: 2.2rem; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: radial-gradient(ellipse at top, #13213d, var(--bg) 60%); color: var(--text); min-height: 100vh; }
+    main { max-width: 980px; margin: 0 auto; padding: 56px 20px 40px; }
+    header { text-align: center; margin-bottom: 40px; }
+    .logo { display: inline-flex; width: 72px; height: 72px; border-radius: 18px; background: linear-gradient(135deg, #38bdf8, #6366f1); align-items: center; justify-content: center; font-size: 34px; font-weight: 800; color: #0b1120; margin-bottom: 16px; }
+    h1 { margin: 0 0 8px; font-size: 2.6rem; letter-spacing: -.02em; }
     h1 span { color: var(--accent); }
-    h2 { font-size: 1.15rem; margin: 0 0 12px; }
-    p.lead { color: var(--muted); margin: 0 0 32px; }
-    .card { background: var(--card); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; }
-    .row { display: flex; gap: 12px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
-    .row label { width: 120px; color: var(--muted); font-size: .9rem; }
-    code { flex: 1; min-width: 0; background: #0b1220; padding: 8px 10px; border-radius: 6px; word-break: break-all; font-size: .9rem; }
-    button { background: var(--accent); color: #0f172a; border: 0; border-radius: 6px; padding: 8px 12px; font-weight: 600; cursor: pointer; }
-    ol { padding-left: 20px; line-height: 1.7; }
-    .downloads { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .downloads a { display: block; text-align: center; background: #0b1220; color: var(--text); text-decoration: none; padding: 12px; border-radius: 8px; }
-    .downloads a:hover { outline: 1px solid var(--accent); }
-    small { color: var(--muted); }
+    .lead { color: var(--muted); margin: 0 auto; max-width: 560px; line-height: 1.6; }
+    .hero-btn { display: inline-block; margin-top: 24px; background: var(--accent); color: #0b1120; padding: 14px 28px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 1.05rem; }
+    .hero-btn.disabled { background: var(--card2); color: var(--muted); pointer-events: none; }
+    .hero-sub { display: block; margin-top: 10px; color: var(--muted); font-size: .85rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; margin-bottom: 28px; }
+    .card { background: var(--card); border: 1px solid #22304d; border-radius: 14px; padding: 22px; }
+    .card.detected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .card h2 { margin: 0 0 4px; font-size: 1.25rem; display: flex; align-items: center; gap: 10px; }
+    .card .icon { font-size: 1.6rem; }
+    .card .req { color: var(--muted); font-size: .85rem; margin: 0 0 16px; }
+    .dl { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--card2); color: var(--text); text-decoration: none; padding: 12px 14px; border-radius: 9px; margin-bottom: 8px; }
+    .dl:hover { outline: 1px solid var(--accent); }
+    .dl b { font-size: .95rem; }
+    .dl small { color: var(--muted); white-space: nowrap; }
+    .dl.na { opacity: .5; pointer-events: none; }
+    details { margin-top: 12px; color: var(--muted); font-size: .88rem; }
+    summary { cursor: pointer; color: var(--text); }
+    details ol { padding-left: 18px; line-height: 1.65; margin: 8px 0 0; }
+    code { background: #0b1220; padding: 2px 6px; border-radius: 5px; font-size: .85rem; word-break: break-all; }
+    .section { background: var(--card); border: 1px solid #22304d; border-radius: 14px; padding: 22px 24px; margin-bottom: 18px; }
+    .section h2 { font-size: 1.1rem; margin: 0 0 10px; }
+    .row { display: flex; gap: 10px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+    .row label { width: 110px; color: var(--muted); font-size: .88rem; }
+    .row code { flex: 1; min-width: 0; padding: 8px 10px; }
+    button { background: var(--accent); color: #0b1120; border: 0; border-radius: 6px; padding: 7px 12px; font-weight: 600; cursor: pointer; }
+    .muted { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+    footer { text-align: center; color: var(--muted); font-size: .8rem; margin-top: 30px; }
   </style>
 </head>
 <body>
 <main>
-  <h1>Gud<span>Desk</span></h1>
-  <p class="lead">Remote desktop self-hosted milik Gutekno, berbasis RustDesk. Koneksi lewat server kita sendiri, bukan server publik.</p>
+  <header>
+    <div class="logo">G</div>
+    <h1>Gud<span>Desk</span></h1>
+    <p class="lead">Remote desktop milik Gutekno. Server dan kunci keamanan sudah tertanam, jadi tinggal install lalu langsung bisa dipakai, tanpa setting apa pun.</p>
+    <a id="hero" class="hero-btn disabled" href="#downloads">Memuat…</a>
+    <span class="hero-sub" id="hero-sub"></span>
+  </header>
 
-  <div class="card">
-    <h2>1. Download aplikasi</h2>
-    <div class="downloads">
-      <a href="https://github.com/rustdesk/rustdesk/releases/latest" target="_blank" rel="noopener">Windows</a>
-      <a href="https://github.com/rustdesk/rustdesk/releases/latest" target="_blank" rel="noopener">macOS</a>
-      <a href="https://github.com/rustdesk/rustdesk/releases/latest" target="_blank" rel="noopener">Linux</a>
-      <a href="https://play.google.com/store/apps/details?id=com.carriez.flutter_hbb" target="_blank" rel="noopener">Android</a>
-      <a href="https://apps.apple.com/app/rustdesk-remote-desktop/id1581225015" target="_blank" rel="noopener">iOS</a>
+  <div class="grid" id="downloads">
+    <div class="card" data-os="linux">
+      <h2><span class="icon">🐧</span> Ubuntu / Debian</h2>
+      <p class="req">Ubuntu 18.04 atau lebih baru, 64-bit</p>
+      <a class="dl" data-file="GudDesk-linux-amd64.deb"><b>Download .deb (x86_64)</b><small>–</small></a>
+      <details>
+        <summary>Cara install</summary>
+        <ol>
+          <li>Buka Terminal di folder download.</li>
+          <li>Jalankan <code>sudo apt install ./GudDesk-linux-amd64.deb</code></li>
+          <li>Buka aplikasi <b>RustDesk</b> dari menu aplikasi.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="card" data-os="mac">
+      <h2><span class="icon">🍎</span> macOS</h2>
+      <p class="req">Apple Silicon: macOS 12.3+ · Intel: macOS 10.14+</p>
+      <a class="dl" data-file="GudDesk-macos-apple-silicon.dmg"><b>Apple Silicon (M1/M2/M3/M4)</b><small>–</small></a>
+      <a class="dl" data-file="GudDesk-macos-intel.dmg"><b>Intel</b><small>–</small></a>
+      <details>
+        <summary>Cara install</summary>
+        <ol>
+          <li>Buka file <code>.dmg</code>, seret ikon ke folder <b>Applications</b>.</li>
+          <li>Karena aplikasi belum di-notarize Apple, buka Terminal lalu jalankan:<br><code>xattr -cr /Applications/RustDesk.app</code></li>
+          <li>Buka aplikasinya, lalu izinkan <b>Screen Recording</b> dan <b>Accessibility</b> di System Settings → Privacy &amp; Security.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="card" data-os="android">
+      <h2><span class="icon">🤖</span> Android</h2>
+      <p class="req">Android 6.0 atau lebih baru</p>
+      <a class="dl" data-file="GudDesk-android-arm64.apk"><b>HP modern (arm64)</b><small>–</small></a>
+      <a class="dl" data-file="GudDesk-android-armv7.apk"><b>HP lama (armv7)</b><small>–</small></a>
+      <details>
+        <summary>Cara install</summary>
+        <ol>
+          <li>Download APK (hampir semua HP sekarang pakai <b>arm64</b>).</li>
+          <li>Buka file-nya, izinkan <b>Install dari sumber tidak dikenal</b> kalau diminta.</li>
+          <li>Untuk dikontrol dari PC: buka tab <b>Share Screen</b>, lalu aktifkan service dan izinnya.</li>
+        </ol>
+      </details>
     </div>
   </div>
 
-  <div class="card">
-    <h2>2. Atur server</h2>
-    <ol>
-      <li>Buka aplikasi, klik menu <b>⋮</b> di sebelah ID → <b>Network</b> (atau <b>Settings → Network → ID/Relay server</b>).</li>
-      <li>Isi field di bawah ini, lalu klik <b>OK</b>.</li>
-    </ol>
+  <div class="section">
+    <h2>Cara pakai</h2>
+    <p class="muted">Buka aplikasi di kedua perangkat. Perangkat yang mau diremote memberikan <b>ID</b> dan <b>password</b> yang tampil di layar, lalu perangkat yang mengontrol memasukkan ID itu di kolom <b>Control Remote Desktop</b>. Status <b>Ready</b> di bagian bawah aplikasi berarti sudah tersambung ke server GudDesk.</p>
+  </div>
+
+  <div class="section">
+    <h2>Pakai aplikasi RustDesk resmi? Isi server manual</h2>
+    <p class="muted">Hanya perlu kalau kamu install RustDesk dari situs/Play Store resmi (misalnya untuk Windows atau iOS). Buka <b>Settings → Network → ID/Relay server</b>.</p>
     <div class="row"><label>ID server</label><code id="host">id.guddesk.gutekno.com</code><button data-copy="host">Copy</button></div>
     <div class="row"><label>Relay server</label><code id="relay">id.guddesk.gutekno.com</code><button data-copy="relay">Copy</button></div>
-    <div class="row"><label>API server</label><code>(kosongkan)</code></div>
     <div class="row"><label>Key</label><code id="key">memuat…</code><button data-copy="key">Copy</button></div>
+    <div class="row"><label>Import config</label><code id="config">memuat…</code><button data-copy="config">Copy</button></div>
   </div>
 
-  <div class="card">
-    <h2>Cara cepat: import config</h2>
-    <p><small>Salin teks ini, lalu di aplikasi buka <b>Settings → Network → ID/Relay server</b> dan klik ikon <b>Import</b> (clipboard).</small></p>
-    <div class="row"><code id="config">memuat…</code><button data-copy="config">Copy</button></div>
-  </div>
-
-  <p><small>Status koneksi "Ready" di bagian bawah aplikasi berarti sudah terhubung ke server GudDesk.</small></p>
+  <footer id="footer">GudDesk by Gutekno · berbasis <a href="https://github.com/rustdesk/rustdesk" style="color:inherit">RustDesk</a> (AGPL-3.0)</footer>
 </main>
 <script>
   const host = document.getElementById('host').textContent.trim();
+  const labels = {
+    'GudDesk-linux-amd64.deb': 'Ubuntu (.deb)',
+    'GudDesk-macos-apple-silicon.dmg': 'macOS Apple Silicon',
+    'GudDesk-macos-intel.dmg': 'macOS Intel',
+    'GudDesk-android-arm64.apk': 'Android',
+  };
+
+  function detectFile() {
+    const ua = navigator.userAgent;
+    if (/Android/i.test(ua)) return ['android', 'GudDesk-android-arm64.apk'];
+    if (/Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua)) {
+      // Safari and Firefox on Apple Silicon still report "Intel"; WebGL renderer is the reliable hint.
+      let arm = true;
+      try {
+        const gl = document.createElement('canvas').getContext('webgl');
+        const r = gl && gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info')?.UNMASKED_RENDERER_WEBGL ?? gl.RENDERER);
+        if (r && /Intel|AMD|Radeon|NVIDIA/i.test(r)) arm = false;
+      } catch (_) {}
+      return ['mac', arm ? 'GudDesk-macos-apple-silicon.dmg' : 'GudDesk-macos-intel.dmg'];
+    }
+    if (/Linux|X11/i.test(ua)) return ['linux', 'GudDesk-linux-amd64.deb'];
+    return [null, null];
+  }
+
+  const mb = n => (n / 1048576).toFixed(1) + ' MB';
+
+  fetch('download/builds.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : { files: {} })
+    .catch(() => ({ files: {} }))
+    .then(builds => {
+      const files = builds.files || {};
+      document.querySelectorAll('.dl').forEach(a => {
+        const f = files[a.dataset.file];
+        if (f) {
+          a.href = 'download/' + a.dataset.file;
+          a.querySelector('small').textContent = mb(f.size);
+        } else {
+          a.classList.add('na');
+          a.querySelector('small').textContent = 'segera';
+        }
+      });
+
+      const [os, file] = detectFile();
+      const hero = document.getElementById('hero');
+      if (os) document.querySelector(`.card[data-os="${os}"]`).classList.add('detected');
+      if (file && files[file]) {
+        hero.textContent = 'Download untuk ' + labels[file];
+        hero.href = 'download/' + file;
+        hero.classList.remove('disabled');
+        document.getElementById('hero-sub').textContent = 'Versi ' + (builds.version || '') + ' · ' + mb(files[file].size);
+      } else if (file) {
+        hero.textContent = 'Build untuk perangkatmu sedang disiapkan';
+      } else {
+        hero.textContent = 'Pilih platform di bawah';
+        hero.classList.remove('disabled');
+      }
+    });
 
   fetch('key.pub', { cache: 'no-store' })
     .then(r => r.ok ? r.text() : Promise.reject(r.status))
