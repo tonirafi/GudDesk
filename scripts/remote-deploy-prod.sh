@@ -38,6 +38,6 @@ fi
 # hbbs generates the keypair on first start; web mounts the public key file, so it must exist first.
 "${SSH[@]}" "cd $REMOTE_DIR && docker compose pull -q && docker compose up -d hbbr hbbs && \
   for i in \$(seq 1 30); do [ -s data/id_ed25519.pub ] && break; sleep 1; done && \
-  docker compose up -d web && docker compose ps && echo && echo \"Public key: \$(cat data/id_ed25519.pub)\""
+  docker compose up -d --force-recreate web && docker compose ps && echo && echo \"Public key: \$(cat data/id_ed25519.pub)\""
 
 log "✅ Remote deploy selesai — https://${DOMAIN:-guddesk.gutekno.com}"
