@@ -19,6 +19,8 @@ rsync -a --delete \
   --exclude /flutter/android/app/src/main/jniLibs --exclude /flutter/linux/flutter/ephemeral \
   /src/ "$SRC/"
 cd "$SRC"
+# build.rs regenerates the gitignored src/version.rs (removed by the sync) only when Cargo.toml changes.
+touch Cargo.toml
 VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
 log "GudDesk client ${VERSION}, targets: ${TARGETS}"
 
@@ -67,11 +69,13 @@ build_android() {
 
 build_linux() {
   vcpkg_install x64-linux
+  cp Cargo.toml /tmp/Cargo.toml.orig
   sed -i 's/\["cdylib", "staticlib", "rlib"\]/["cdylib"]/g' Cargo.toml
   log "cargo build linux"
   cargo build --locked --lib --features hwcodec,flutter,unix-file-copy-paste --release
   log "flutter build linux + deb"
   DEB_ARCH=amd64 python3 ./build.py --flutter --skip-cargo
+  cp /tmp/Cargo.toml.orig Cargo.toml
   mv "rustdesk-${VERSION}.deb" "$OUT/GudDesk-linux-amd64.deb"
   log "ok: GudDesk-linux-amd64.deb"
 }
