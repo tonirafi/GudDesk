@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Download GudDesk — Remote Desktop Gutekno</title>
-  <meta name="description" content="Download GudDesk untuk Ubuntu, macOS, dan Android. Remote desktop self-hosted milik Gutekno.">
+  <meta name="description" content="Download GudDesk untuk Ubuntu dan Android. Remote desktop self-hosted milik Gutekno.">
   <style>
     :root { --bg: #0b1120; --card: #151e32; --card2: #1c2740; --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8; --ok: #4ade80; --warn: #fbbf24; }
     * { box-sizing: border-box; }
@@ -59,7 +59,7 @@
   <div class="grid" id="downloads">
     <div class="card" data-os="linux">
       <h2><span class="icon">🐧</span> Ubuntu / Debian</h2>
-      <p class="req">Ubuntu 18.04 atau lebih baru, 64-bit</p>
+      <p class="req">Ubuntu 22.04 / Debian 12 atau lebih baru, 64-bit</p>
       <a class="dl" data-file="GudDesk-linux-amd64.deb"><b>Download .deb (x86_64)</b><small>–</small></a>
       <details>
         <summary>Cara install</summary>
@@ -67,21 +67,6 @@
           <li>Buka Terminal di folder download.</li>
           <li>Jalankan <code>sudo apt install ./GudDesk-linux-amd64.deb</code></li>
           <li>Buka aplikasi <b>RustDesk</b> dari menu aplikasi.</li>
-        </ol>
-      </details>
-    </div>
-
-    <div class="card" data-os="mac">
-      <h2><span class="icon">🍎</span> macOS</h2>
-      <p class="req">Apple Silicon: macOS 12.3+ · Intel: macOS 10.14+</p>
-      <a class="dl" data-file="GudDesk-macos-apple-silicon.dmg"><b>Apple Silicon (M1/M2/M3/M4)</b><small>–</small></a>
-      <a class="dl" data-file="GudDesk-macos-intel.dmg"><b>Intel</b><small>–</small></a>
-      <details>
-        <summary>Cara install</summary>
-        <ol>
-          <li>Buka file <code>.dmg</code>, seret ikon ke folder <b>Applications</b>.</li>
-          <li>Karena aplikasi belum di-notarize Apple, buka Terminal lalu jalankan:<br><code>xattr -cr /Applications/RustDesk.app</code></li>
-          <li>Buka aplikasinya, lalu izinkan <b>Screen Recording</b> dan <b>Accessibility</b> di System Settings → Privacy &amp; Security.</li>
         </ol>
       </details>
     </div>
@@ -122,24 +107,13 @@
   const host = document.getElementById('host').textContent.trim();
   const labels = {
     'GudDesk-linux-amd64.deb': 'Ubuntu (.deb)',
-    'GudDesk-macos-apple-silicon.dmg': 'macOS Apple Silicon',
-    'GudDesk-macos-intel.dmg': 'macOS Intel',
     'GudDesk-android-arm64.apk': 'Android',
   };
 
   function detectFile() {
     const ua = navigator.userAgent;
     if (/Android/i.test(ua)) return ['android', 'GudDesk-android-arm64.apk'];
-    if (/Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua)) {
-      // Safari and Firefox on Apple Silicon still report "Intel"; WebGL renderer is the reliable hint.
-      let arm = true;
-      try {
-        const gl = document.createElement('canvas').getContext('webgl');
-        const r = gl && gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info')?.UNMASKED_RENDERER_WEBGL ?? gl.RENDERER);
-        if (r && /Intel|AMD|Radeon|NVIDIA/i.test(r)) arm = false;
-      } catch (_) {}
-      return ['mac', arm ? 'GudDesk-macos-apple-silicon.dmg' : 'GudDesk-macos-intel.dmg'];
-    }
+    if (/Macintosh|Mac OS X/i.test(ua)) return [null, null];
     if (/Linux|X11/i.test(ua)) return ['linux', 'GudDesk-linux-amd64.deb'];
     return [null, null];
   }

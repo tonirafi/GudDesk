@@ -22,9 +22,18 @@ Firewall Hostinger (`gutekno-srv1028008`) sudah dibuka untuk TCP 21115-21119 dan
 
 ## Deploy
 
+Semua build di local PC (tidak ada build di server maupun GitHub Actions):
+
 ```bash
-./deploy.sh
+make build-client          # .deb + .apk dari ../guddesk-client ke ./downloads (Docker)
+make remote-deploy-prod    # rsync config + downloads, docker compose pull/up di server
+make release-prod          # keduanya
 ```
+
+Build pertama lama (vcpkg/ffmpeg, Rust, Flutter); berikutnya pakai cache di Docker volume `guddesk-*`.
+APK ditandatangani dengan key di `~/.config/guddesk/android/debug.keystore`. Backup file itu:
+kalau hilang, update APK di HP yang sudah install akan ditolak (harus uninstall dulu).
+macOS tidak di-build karena butuh Mac.
 
 Keypair dibuat otomatis oleh `hbbs` saat pertama jalan di `data/`. Jangan hapus `data/id_ed25519*`,
 kalau hilang semua client harus diisi key baru.

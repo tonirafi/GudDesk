@@ -1,0 +1,27 @@
+# ============================================
+# Project Configuration - GudDesk
+# ============================================
+
+PROJECT_NAME=guddesk
+PROJECT_DESCRIPTION="GudDesk self-hosted remote desktop"
+
+# ============================================
+# Server Configuration
+# ============================================
+SERVER_USER=root
+SERVER_IP=148.230.101.168
+SERVER_PATH=/opt/gutekno/guddesk
+SSH_KEY=$HOME/.ssh/id_ed25519
+
+# ============================================
+# Domain Configuration
+# ============================================
+DOMAIN=guddesk.gutekno.com
+RELAY_HOST=id.guddesk.gutekno.com
+DOCKER_NETWORK=gutekno_net
+
+# ============================================
+# Client build (local PC only)
+# ============================================
+CLIENT_DIR=../guddesk-client
+BUILDER_IMAGE=guddesk-client-builder
