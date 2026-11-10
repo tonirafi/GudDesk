@@ -9,7 +9,14 @@ mkdir -p downloads
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
-curl -fsSL "https://api.github.com/repos/$REPO/releases/tags/$TAG" -o "$tmp/release.json"
+if [ "$TAG" = "latest" ]; then
+  release_url="https://api.github.com/repos/$REPO/releases/latest"
+else
+  release_url="https://api.github.com/repos/$REPO/releases/tags/$TAG"
+fi
+official=false
+[ "$REPO" = "rustdesk/rustdesk" ] && official=true
+curl -fsSL "$release_url" -o "$tmp/release.json"
 grep -o '"browser_download_url": *"[^"]*"' "$tmp/release.json" | cut -d'"' -f4 > "$tmp/urls"
 
 # target filename <- asset name pattern
@@ -39,6 +46,7 @@ for m in "${map[@]}"; do
   echo "ok: $target ($size bytes)"
 done
 
-printf '{"version":"%s","updated":"%s","files":{%s}}\n' \
-  "$version" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(IFS=,; echo "${entries[*]}")" > downloads/builds.json
+printf '{"version":"%s","official":%s,"updated":"%s","files":{%s}}\n' \
+  "$version" "$official" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(IFS=,; echo "${entries[*]}")" > downloads/builds.json.tmp
+mv downloads/builds.json.tmp downloads/builds.json
 cat downloads/builds.json

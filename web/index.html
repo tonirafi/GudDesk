@@ -40,6 +40,9 @@
     .row code { flex: 1; min-width: 0; padding: 8px 10px; }
     button { background: var(--accent); color: #0b1120; border: 0; border-radius: 6px; padding: 7px 12px; font-weight: 600; cursor: pointer; }
     .muted { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+    .section.highlight { border-color: var(--warn); }
+    .step-after { display: none; color: var(--warn); }
+    body.official .step-after { display: list-item; }
     footer { text-align: center; color: var(--muted); font-size: .8rem; margin-top: 30px; }
   </style>
 </head>
@@ -48,7 +51,7 @@
   <header>
     <div class="logo">G</div>
     <h1>Gud<span>Desk</span></h1>
-    <p class="lead">Remote desktop milik Gutekno. Server dan kunci keamanan sudah tertanam, jadi tinggal install lalu langsung bisa dipakai, tanpa setting apa pun.</p>
+    <p class="lead" id="lead">Remote desktop milik Gutekno. Server dan kunci keamanan sudah tertanam, jadi tinggal install lalu langsung bisa dipakai, tanpa setting apa pun.</p>
     <a id="hero" class="hero-btn disabled" href="#downloads">Memuat…</a>
     <span class="hero-sub" id="hero-sub"></span>
   </header>
