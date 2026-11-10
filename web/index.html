@@ -119,6 +119,8 @@
   }
 
   const mb = n => (n / 1048576).toFixed(1) + ' MB';
+  // Cloudflare caches .apk/.deb by URL, so each build gets its own URL.
+  const dlUrl = (name, f) => 'download/' + name + '?v=' + (f.sha256 || '').slice(0, 12);
 
   fetch('download/builds.json', { cache: 'no-store' })
     .then(r => r.ok ? r.json() : { files: {} })
@@ -128,7 +130,7 @@
       document.querySelectorAll('.dl').forEach(a => {
         const f = files[a.dataset.file];
         if (f) {
-          a.href = 'download/' + a.dataset.file;
+          a.href = dlUrl(a.dataset.file, f);
           a.querySelector('small').textContent = mb(f.size);
         } else {
           a.classList.add('na');
@@ -141,7 +143,7 @@
       if (os) document.querySelector(`.card[data-os="${os}"]`).classList.add('detected');
       if (file && files[file]) {
         hero.textContent = 'Download untuk ' + labels[file];
-        hero.href = 'download/' + file;
+        hero.href = dlUrl(file, files[file]);
         hero.classList.remove('disabled');
         document.getElementById('hero-sub').textContent = 'Versi ' + (builds.version || '') + ' · ' + mb(files[file].size);
       } else if (file) {
