@@ -31,8 +31,9 @@ make release-prod          # keduanya
 ```
 
 Build pertama lama (vcpkg/ffmpeg, Rust, Flutter); berikutnya pakai cache di Docker volume `guddesk-*`.
-APK ditandatangani dengan key di `~/.config/guddesk/android/debug.keystore`. Backup file itu:
-kalau hilang, update APK di HP yang sudah install akan ditolak (harus uninstall dulu).
+APK ditandatangani dengan key rilis di `~/.config/guddesk/android/guddesk-release.jks`
+(password di `keystore.env` sebelahnya). Backup kedua file itu: kalau hilang, update APK di HP
+yang sudah install akan ditolak (harus uninstall dulu).
 macOS tidak di-build karena butuh Mac.
 
 Keypair dibuat otomatis oleh `hbbs` saat pertama jalan di `data/`. Jangan hapus `data/id_ed25519*`,

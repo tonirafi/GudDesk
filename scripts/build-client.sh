@@ -37,9 +37,23 @@ docker build -t "$BUILDER_IMAGE" "$PROJECT_ROOT/client-build"
 
 mkdir -p "$PROJECT_ROOT/downloads" "$KEYSTORE_DIR"
 
+RELEASE_KEYSTORE="$KEYSTORE_DIR/guddesk-release.jks"
+RELEASE_ENV="$KEYSTORE_DIR/keystore.env"
+if [ ! -f "$RELEASE_KEYSTORE" ]; then
+  log "Membuat keystore rilis di $RELEASE_KEYSTORE (backup file ini, kalau hilang update APK ditolak)"
+  pw=$(openssl rand -base64 24)
+  keytool -genkeypair -keystore "$RELEASE_KEYSTORE" -alias guddesk -keyalg RSA -keysize 2048 \
+    -validity 10000 -dname "CN=GudDesk, O=Gutekno, C=ID" -storepass "$pw" -keypass "$pw"
+  umask 077
+  printf 'GUDDESK_STORE_PASSWORD=%q\nGUDDESK_KEY_PASSWORD=%q\nGUDDESK_KEY_ALIAS=guddesk\n' "$pw" "$pw" > "$RELEASE_ENV"
+fi
+# shellcheck disable=SC1090
+set -a && source "$RELEASE_ENV" && set +a
+
 log "Building client (${TARGETS}) from ${CLIENT_DIR}..."
 docker run --rm \
   -e TARGETS="$TARGETS" -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
+  -e GUDDESK_STORE_PASSWORD -e GUDDESK_KEY_PASSWORD -e GUDDESK_KEY_ALIAS \
   -v "$CLIENT_DIR:/src:ro" \
   -v "$PROJECT_ROOT/downloads:/out" \
   -v "$KEYSTORE_DIR:/root/.android" \

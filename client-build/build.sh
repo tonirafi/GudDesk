@@ -59,8 +59,14 @@ build_android() {
   cp "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/${sysroot}/libc++_shared.so" "$jni/"
   cp "target/${target}/release/liblibrustdesk.so" "$jni/librustdesk.so"
   sed -i "s/org.gradle.jvmargs=-Xmx1024M/org.gradle.jvmargs=-Xmx4g/g" flutter/android/gradle.properties
-  # Unsigned release in CI falls back to the debug key; ours lives in ~/.config/guddesk/android on the host.
-  sed -i "s/signingConfigs.release/signingConfigs.debug/g" flutter/android/app/build.gradle
+  # Release keystore is mounted from ~/.config/guddesk/android on the host. A debug signature is what
+  # makes Play Protect hard-block the APK, so never fall back to it.
+  cat > flutter/android/key.properties <<EOF
+storePassword=${GUDDESK_STORE_PASSWORD:?release keystore password missing}
+keyPassword=${GUDDESK_KEY_PASSWORD:?release keystore password missing}
+keyAlias=${GUDDESK_KEY_ALIAS:-guddesk}
+storeFile=/root/.android/guddesk-release.jks
+EOF
   log "flutter build apk ${platform}"
   (cd flutter && flutter build apk --release --target-platform "$platform" --split-per-abi)
   cp "flutter/build/app/outputs/flutter-apk/app-${abi}-release.apk" "$OUT/GudDesk-android-${name}.apk"
