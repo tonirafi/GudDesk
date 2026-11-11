@@ -120,7 +120,7 @@
 
   const mb = n => (n / 1048576).toFixed(1) + ' MB';
   // Cloudflare caches .apk/.deb by URL, so each build gets its own URL.
-  const dlUrl = (name, f) => 'download/' + name + '?v=' + (f.sha256 || '').slice(0, 12);
+  const dlUrl = (name, f) => 'download/' + name + '?v=' + (f.sha256 || '').slice(0, 16);
 
   fetch('download/builds.json', { cache: 'no-store' })
     .then(r => r.ok ? r.json() : { files: {} })
